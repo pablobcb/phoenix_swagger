@@ -50,11 +50,15 @@ defmodule Mix.Tasks.Phx.Swagger.Generate do
     unless File.exists?(directory) do
       File.mkdir_p!(directory)
     end
-    File.write!(output_file, contents)
+
+    case File.read(output_file) do
+      {:ok, ^contents} -> :ok
+      _ -> File.write!(output_file, contents)
+    end
   end
 
   defp attempt_load(module_name) do
-    case Code.ensure_loaded(module_name) do
+    case Code.ensure_compiled(module_name) do
       {:module, result} -> result
       _ -> nil
     end
@@ -113,7 +117,7 @@ defmodule Mix.Tasks.Phx.Swagger.Generate do
     swagger_fun = "swagger_path_#{action}" |> String.to_atom()
 
     cond do
-      Code.ensure_loaded?(controller) ->
+      Code.ensure_compiled?(controller) ->
         %{
           controller: controller,
           swagger_fun: swagger_fun,
