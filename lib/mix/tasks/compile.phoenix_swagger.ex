@@ -1,5 +1,5 @@
 defmodule Mix.Tasks.Compile.PhoenixSwagger do
-  use Mix.Task.Compiler
+  use Mix.Task
 
   @shortdoc "Compiles swagger annotations to JSON file"
 
